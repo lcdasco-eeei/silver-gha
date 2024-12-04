@@ -18,9 +18,10 @@ jobs:
       runner-name: ubuntu-latest
   clone:
     needs: setup-wf-inputs
-    runs-on: ubuntu-latest
+    runs-on: ${{ needs.setup-wf-inputs.outputs.runner-name }}
     env:
       GHA_CHECKOUT_DIR : ${{ needs.setup-wf-inputs.outputs.checkout-path }}
+      GHA_BLOCK : ${{ needs.setup-wf-inputs.outputs.block-name }}
     outputs:
       changes_flag: ${{ steps.filter.outputs.changes_flag }}
     steps:
@@ -48,10 +49,14 @@ jobs:
     - name: Echo Inputs
       run: |
         echo ${{ needs.setup-wf-inputs.outputs.block-name }}
-        echo ${{ needs.setup-wf-inputs.outputs.testsuite }}
+        echo ${{ needs.setup-wf-inputs.outputs.testsuite-name }}
         echo ${{ needs.setup-wf-inputs.outputs.checkout-root-dir }}
         echo ${{ needs.setup-wf-inputs.outputs.checkout-path }}
-        echo ${{ needs.setup-wf-inputs.outputs.runner-name }}  
+        echo ${{ needs.setup-wf-inputs.outputs.runner-name }}
+    - name: Test Checkout Directory
+      run: |
+        cd $GITHUB_WORKSPACE/${{ needs.setup-wf-inputs.outputs.checkout-path }}
+        pwd        
   run-rwf-job2:
     needs: [setup-wf-inputs, clone]
     # if: ${{ needs.clone.outputs.changes_flag == 'true' }}
@@ -62,7 +67,7 @@ jobs:
     with:
         checkout-path: ${{ needs.setup-wf-inputs.outputs.checkout-path }}
         block: ${{ needs.setup-wf-inputs.outputs.block-name }}
-        testsuite: ${{ needs.setup-wf-inputs.outputs.testsuite }}
+        testsuite: ${{ needs.setup-wf-inputs.outputs.testsuite-name }}
         testname: ${{ matrix.tests }}
         runner-name: ${{ needs.setup-wf-inputs.outputs.runner-name }}
       
