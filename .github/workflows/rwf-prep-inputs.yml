@@ -29,30 +29,43 @@ on:
       block-name:
         description: "Block Name"
         value: ${{ jobs.gen-rwf-inputs.outputs.block-name }}
+      testsuite-name:
+        description: "Testsuite Name"
+        value: ${{ jobs.gen-rwf-inputs.outputs.testsuite-name }}
       runner-name:
         description: "Runner Name"
         value: ${{ jobs.gen-rwf-inputs.outputs.runner-name }}
 jobs:
-  gen-rwf-inputs:
+  prep-wf-inputs:
     name: Generate RWF Inputs
     runs-on: "${{ inputs.runner-name }}" 
     outputs:
       checkout-root-dir: ${{ steps.checkout-root-dir.outputs.uppercase }}
       checkout-path: ${{ steps.checkout-path.outputs.path }}  
       block-name: ${{ steps.block-name.outputs.lowercase }}
+      testsuite-name : ${{ steps.testsuite-name.outputs.lowercase }}
       runner-name: ${{ steps.runner-name.outputs.lowercase }}
     steps:
-      - id: checkout-root-dir
+      - name : set checkout-root-dir
+        id: checkout-root-dir
         uses: ASzc/change-string-case-action@v6
         with:
           string: ${{ inputs.block-prefix }}${{ inputs.block }}${{ inputs.block-suffix }}
-      - id: checkout-path
+      - name: set checkout-path
+        id: checkout-path
         run: echo "path=${{ steps.checkout-root-dir.outputs.uppercase }}/${{ github.actor }}/${{ github.event_name }}/${{ github.run_number }}" >> $GITHUB_OUTPUT
-      - id: block-name
+      - name: set block-name
+        id: block-name
         uses: ASzc/change-string-case-action@v6
         with:
           string: ${{ inputs.block }}
-      - id: runner-name
+      - name: set testsuite-name
+        id: testsuite-name
+        uses: ASzc/change-string-case-action@v6
+        with:
+          string: ${{ inputs.testsuite }}  
+      - name: set runner-name
+        id: runner-name
         uses: ASzc/change-string-case-action@v6
         with:
           string: ${{ inputs.runner-name }}  
