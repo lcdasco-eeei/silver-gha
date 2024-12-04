@@ -12,7 +12,6 @@ on:
       testnames:
         required: true
         type: string
-        default: "['bringup_test']"
       block-suffix:
         type: string
         default: ''
@@ -35,7 +34,7 @@ on:
         value: ${{ jobs.prep-wf-inputs.outputs.block-name }}
       test-names:
         description: "Testsuite Names"
-        value: ${{ jobs.prep-wf-inputs.outputs.testsuite-name }}
+        value: ${{ jobs.prep-wf-inputs.outputs.test-names }}
       testsuite-name:
         description: "Testsuite Name"
         value: ${{ jobs.prep-wf-inputs.outputs.testsuite-name }}
