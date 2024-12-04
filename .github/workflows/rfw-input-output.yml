@@ -42,6 +42,7 @@ jobs:
     uses: ./.github/workflows/rwf-genrwfinputs.yml
     with:
       block: siag
+      block-suffix: _SMOKE
       testsuite: sanity
       runner-name: ubuntu-latest
   run-rwf-job1:
