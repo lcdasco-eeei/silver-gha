@@ -13,7 +13,15 @@ permissions:
   pull-requests: read
 
 jobs:
+  gen-wf-inputs:
+    uses: ./.github/workflows/rwf-genrwfinputs.yml
+    with:
+      block: siag
+      block-suffix: _SMOKE
+      testsuite: sanity
+      runner-name: ubuntu-latest
   clone:
+    needs: gen-wf-inputs
     runs-on: ubuntu-latest
     outputs:
       changes_flag: ${{ steps.filter.outputs.changes_flag }}
@@ -35,37 +43,27 @@ jobs:
         cd $GITHUB_WORKSPACE/$GHA_CHECKOUT_DIR
         pwd
         git show --no-patch
-
-  gen-wf-inputs:
-    needs: clone
-    # if: ${{ needs.clone.outputs.changes_flag == 'true' }}
-    uses: ./.github/workflows/rwf-genrwfinputs.yml
-    with:
-      block: siag
-      block-suffix: _SMOKE
-      testsuite: sanity
-      runner-name: ubuntu-latest
   run-rwf-job1:
     runs-on: ubuntu-latest
-    needs: gen-wf-inputs
+    needs: clone
     steps:
     - name: Echo Inputs
       run: |
-        echo ${{ needs.gen-wf-inputs.outputs.block-name }}
-        echo ${{ needs.gen-wf-inputs.outputs.checkout-root-dir }}
-        echo ${{ needs.gen-wf-inputs.outputs.checkout-path }}
-        echo ${{ needs.gen-wf-inputs.outputs.runner-name }}  
+        echo ${{ needs.clone.needs.gen-wf-inputs.outputs.block-name }}
+        echo ${{ needs.clone.needs.gen-wf-inputs.outputs.checkout-root-dir }}
+        echo ${{ needs.clone.needs.gen-wf-inputs.outputs.checkout-path }}
+        echo ${{ needs.clone.needs.gen-wf-inputs.outputs.runner-name }}  
   run-rwf-job2:
-    needs: gen-wf-inputs
+    needs: clone
     # if: ${{ needs.clone.outputs.changes_flag == 'true' }}
     strategy:
       matrix:
         tests: [case1_test, case2_test, case3_test]
     uses: ./.github/workflows/rwf-wf-1.yml
     with:
-        checkout-path: ${{ needs.gen-wf-inputs.outputs.checkout-path }}
-        block: ${{ needs.gen-wf-inputs.outputs.block-name }}
+        checkout-path: ${{ needs.clone.needs.gen-wf-inputs.outputs.checkout-path }}
+        block: ${{ needs.clone.needs.gen-wf-inputs.outputs.block-name }}
         testsuite: test-suite1
         testname: ${{ matrix.tests }}
-        runner-name: ${{ needs.gen-wf-inputs.outputs.runner-name }}
+        runner-name: ${{ needs.clone.needs.gen-wf-inputs.outputs.runner-name }}
       
