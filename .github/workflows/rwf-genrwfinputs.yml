@@ -1,0 +1,49 @@
+name: Generate Input Strings for Re-usable Workflows
+
+on:
+  workflow_call:
+    inputs:
+      block:
+        required: true
+        type: string
+      testsuite:
+        required: true
+        type: string
+      block-suffix:
+        required: true
+        type: string
+        default: ''
+      block-prefix:
+        required: true
+        type: string
+        default: ''
+      runner-name:
+        required: true
+        type: string
+        default: ubuntu-latest
+    outputs:
+      checkout-root-dir:
+        description: "Check Root Director"
+        value: ${{ jobs.gen-rwf-inputs.outputs.checkout-root-dir }}
+      block-name:
+        description: "The second output string"
+        value: ${{ jobs.gen-rwf-inputs.outputs.block-name }}
+
+jobs:
+  gen-rwf-inputs:
+    name: Generate RWF Inputs
+    runs-on: "${{ inputs.runner-name }}"
+    defaults:
+      run:
+        shell: tcsh {0}  
+    outputs:
+      checkout-root-dir: ${{ steps.checkout-root-dir.outputs.uppercase }}
+      block-name: ${{ steps.block-name.outputs.lowercase }}
+    steps:
+      - id: checkout-root-dir
+        uses: ASzc/change-string-case-action@v6
+        with:
+          string: ${{ inputs.block-prefix }}${{ inputs.block }}${{ inputs.block-suffix }}
+      - id: block-name
+        with:
+          string: ${{ inputs.block }}
