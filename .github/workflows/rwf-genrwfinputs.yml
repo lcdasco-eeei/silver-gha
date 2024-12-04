@@ -35,10 +35,7 @@ on:
 jobs:
   gen-rwf-inputs:
     name: Generate RWF Inputs
-    runs-on: "${{ inputs.runner-name }}"
-    defaults:
-      run:
-        shell: tcsh {0}  
+    runs-on: "${{ inputs.runner-name }}" 
     outputs:
       checkout-root-dir: ${{ steps.checkout-root-dir.outputs.uppercase }}
       checkout-path: ${{ steps.checkout-path.outputs.path }}  
