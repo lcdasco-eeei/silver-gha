@@ -1,9 +1,5 @@
 name: XXX Level 1 - Smoke Tests
 
-env:
-  GHA_CHECKOUT_DIR : SIAG_SMOKE/${{ github.actor }}/${{ github.event_name }}/${{ github.run_number }}
-  GHA_BLOCK : siag
-
 on:
   push:
     branches: [ "main"]
@@ -13,7 +9,7 @@ permissions:
   pull-requests: read
 
 jobs:
-  gen-wf-inputs:
+  setup-wf-inputs:
     uses: ./.github/workflows/rwf-genrwfinputs.yml
     with:
       block: siag
@@ -21,8 +17,10 @@ jobs:
       testsuite: sanity
       runner-name: ubuntu-latest
   clone:
-    needs: gen-wf-inputs
+    needs: setup-wf-inputs
     runs-on: ubuntu-latest
+    env:
+      GHA_CHECKOUT_DIR : ${{ needs.setup-wf-inputs.outputs.checkout-path }}
     outputs:
       changes_flag: ${{ steps.filter.outputs.changes_flag }}
     steps:
@@ -45,25 +43,26 @@ jobs:
         git show --no-patch
   run-rwf-job1:
     runs-on: ubuntu-latest
-    needs: clone
+    needs: [setup-wf-inputs, clone]
     steps:
     - name: Echo Inputs
       run: |
-        echo ${{ needs.clone.needs.gen-wf-inputs.outputs.block-name }}
-        echo ${{ needs.clone.needs.gen-wf-inputs.outputs.checkout-root-dir }}
-        echo ${{ needs.clone.needs.gen-wf-inputs.outputs.checkout-path }}
-        echo ${{ needs.clone.needs.gen-wf-inputs.outputs.runner-name }}  
+        echo ${{ needs.setup-wf-inputs.outputs.block-name }}
+        echo ${{ needs.setup-wf-inputs.outputs.testsuite }}
+        echo ${{ needs.setup-wf-inputs.outputs.checkout-root-dir }}
+        echo ${{ needs.setup-wf-inputs.outputs.checkout-path }}
+        echo ${{ needs.setup-wf-inputs.outputs.runner-name }}  
   run-rwf-job2:
-    needs: clone
+    needs: [setup-wf-inputs, clone]
     # if: ${{ needs.clone.outputs.changes_flag == 'true' }}
     strategy:
       matrix:
         tests: [case1_test, case2_test, case3_test]
     uses: ./.github/workflows/rwf-wf-1.yml
     with:
-        checkout-path: ${{ needs.clone.needs.gen-wf-inputs.outputs.checkout-path }}
-        block: ${{ needs.clone.needs.gen-wf-inputs.outputs.block-name }}
-        testsuite: test-suite1
+        checkout-path: ${{ needs.setup-wf-inputs.outputs.checkout-path }}
+        block: ${{ needs.setup-wf-inputs.outputs.block-name }}
+        testsuite: ${{ needs.setup-wf-inputs.outputs.testsuite }}
         testname: ${{ matrix.tests }}
-        runner-name: ${{ needs.clone.needs.gen-wf-inputs.outputs.runner-name }}
+        runner-name: ${{ needs.setup-wf-inputs.outputs.runner-name }}
       
