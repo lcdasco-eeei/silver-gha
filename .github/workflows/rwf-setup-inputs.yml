@@ -42,8 +42,8 @@ jobs:
     outputs:
       checkout-root-dir: ${{ steps.checkout-root-dir.outputs.uppercase }}
       checkout-path: ${{ steps.checkout-path.outputs.path }}  
-      block-name: ${{ inputs.runner-name }}
-      testsuite-name : ${{ inputs.runner-name }}
+      block-name: ${{ inputs.block }}
+      testsuite-name : ${{ inputs.testsuite }}
       runner-name: ${{ inputs.runner-name }}
     steps:
       - name : set checkout-root-dir
