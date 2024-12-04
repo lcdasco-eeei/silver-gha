@@ -43,7 +43,7 @@ jobs:
         pwd
         git show --no-patch
   run-rwf-job1:
-    runs-on: ubuntu-latest
+    runs-on:  ${{ needs.setup-wf-inputs.outputs.runner-name }}
     needs: [setup-wf-inputs, clone]
     steps:
     - name: Echo Inputs
