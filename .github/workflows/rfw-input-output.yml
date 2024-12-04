@@ -15,7 +15,7 @@ jobs:
       block: siag
       block-suffix: _SMOKE
       testsuite: sanity
-      testnames: [case1_test, case2_test, case3_test]
+      testnames: "['case1_test', 'case2_test', 'case3_test']"
       runner-name: ubuntu-latest
   clone:
     needs: setup-wf-inputs
@@ -63,7 +63,7 @@ jobs:
     # if: ${{ needs.clone.outputs.changes_flag == 'true' }}
     strategy:
       matrix:
-        tests: ${{ needs.setup-wf-inputs.outputs.testnames }}
+        tests: ${{ fromJSON(needs.setup-wf-inputs.outputs.testnames) }}
     uses: ./.github/workflows/rwf-wf-1.yml
     with:
         checkout-path: ${{ needs.setup-wf-inputs.outputs.checkout-path }}
