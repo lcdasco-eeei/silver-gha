@@ -53,6 +53,8 @@ jobs:
       run: |
         echo ${{ needs.gen-wf-inputs.outputs.block-name }}
         echo ${{ needs.gen-wf-inputs.outputs.checkout-root-dir }}
+        echo ${{ needs.gen-wf-inputs.outputs.checkout-path }}
+        echo ${{ needs.gen-wf-inputs.outputs.runner-name }}  
   run-rwf-job2:
     needs: gen-wf-inputs
     # if: ${{ needs.clone.outputs.changes_flag == 'true' }}
@@ -61,9 +63,9 @@ jobs:
         tests: [case1_test, case2_test, case3_test]
     uses: ./.github/workflows/rwf-wf-1.yml
     with:
-        checkout-root-dir: ${{ needs.gen-wf-inputs.outputs.checkout-root-dir }}
+        checkout-root-dir: ${{ needs.gen-wf-inputs.outputs.checkout-path }}
         block: ${{ needs.gen-wf-inputs.outputs.block-name }}
         testsuite: test-suite1
         testname: ${{ matrix.tests }}
-        runner-name: ubuntu-latest
+        runner-name: ${{ needs.gen-wf-inputs.outputs.runner-name }}
       
