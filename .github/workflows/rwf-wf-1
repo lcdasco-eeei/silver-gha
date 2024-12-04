@@ -1,0 +1,35 @@
+name: Reusable Workflow 1
+
+on:
+  workflow_call:
+    inputs:
+      checkout-root-dir:
+        required: true
+        type: string
+      block:
+        required: true
+        type: string
+      testsuite:
+        required: true
+        type: string
+      runner-name:
+        required: true
+        type: string        
+
+env:
+  GHA_CHECKOUT_DIR : ${{ inputs.checkout-root-dir }}/${{ github.actor }}/${{ github.event_name }}/${{ github.run_number }}
+  GHA_TESTSUITES_DIR : ${{ inputs.block }}/subdir/${{ inputs.testsuite }}
+  SCRIPT_PATH : scripts/github_actions/run.csh
+  
+jobs:
+  elaborate:
+    runs-on: "${{ inputs.runner-name }}"
+    steps:
+    - name: Run Job
+      run: |
+        echo ${{ env.GHA_CHECKOUT_DIR }}/${{ env.SCRIPT_PATH }} ${{ inputs.block }} ${{ inputs.testsuite }}
+    - name: Artifacts Collection
+      uses: actions/upload-artifact@v4
+      with:
+        name: rwf1-artifacts
+        path: ${{ github.workspace }}/${{ env.GHA_CHECKOUT_DIR }}/${{ env.GHA_TESTSUITES_DIR }}/log/_work*elab_top.log
