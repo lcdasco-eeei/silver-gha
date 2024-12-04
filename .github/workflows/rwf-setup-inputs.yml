@@ -22,19 +22,19 @@ on:
     outputs:
       checkout-root-dir:
         description: "Check Root Director"
-        value: ${{ jobs.gen-rwf-inputs.outputs.checkout-root-dir }}
+        value: ${{ jobs.prep-wf-inputs.outputs.checkout-root-dir }}
       checkout-path:
         description: "Check Root Director"
-        value: ${{ jobs.gen-rwf-inputs.outputs.checkout-path }}        
+        value: ${{ jobs.prep-wf-inputs.outputs.checkout-path }}        
       block-name:
         description: "Block Name"
-        value: ${{ jobs.gen-rwf-inputs.outputs.block-name }}
+        value: ${{ jobs.prep-wf-inputs.outputs.block-name }}
       testsuite-name:
         description: "Testsuite Name"
-        value: ${{ jobs.gen-rwf-inputs.outputs.testsuite-name }}
+        value: ${{ jobs.prep-wf-inputs.outputs.testsuite-name }}
       runner-name:
         description: "Runner Name"
-        value: ${{ jobs.gen-rwf-inputs.outputs.runner-name }}
+        value: ${{ jobs.prep-wf-inputs.outputs.runner-name }}
 jobs:
   prep-wf-inputs:
     name: Generate RWF Inputs
