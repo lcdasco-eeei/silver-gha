@@ -1,0 +1,55 @@
+name: XXX Level 1 - Smoke Tests
+
+env:
+  GHA_CHECKOUT_DIR : SIAG_SMOKE/${{ github.actor }}/${{ github.event_name }}/${{ github.run_number }}
+  GHA_BLOCK : siag
+
+on:
+  push:
+    branches: [ "main"]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  clone:
+    runs-on: ubuntu-latest
+    outputs:
+      changes_flag: ${{ steps.filter.outputs.changes_flag }}
+    steps:
+    - name: Checkout 
+      uses: actions/checkout@v4
+      with:
+        path : ${{ env.GHA_CHECKOUT_DIR }}
+    - name: Filter Changes
+      uses: dorny/paths-filter@v3
+      id: filter
+      with:
+        working-directory: ${{ env.GHA_CHECKOUT_DIR }}
+        filters: |
+          changes_flag:
+            - '${{env.GHA_BLOCK}}/**'
+    - name: Show Repository
+      run: |
+        cd $GITHUB_WORKSPACE/$GHA_CHECKOUT_DIR
+        pwd
+        git show --no-patch
+
+  gen-wf-inputs:
+    needs: clone
+    # if: ${{ needs.clone.outputs.changes_flag == 'true' }}
+    uses: ./.github/workflows/rwf-genrwfinputs.yml
+    with:
+      block: siag
+      testsuite: sanity
+      runner-name: ubuntu-latest
+  run-rwf-job1:
+    runs-on: ubuntu-latest
+    needs: gen-wf-inputs
+    steps:
+    - name: Echo Inputs
+      run: |
+        echo ${{ needs.gen-wf-inputs.outputs.block-name }}
+        echo ${{ needs.gen-wf-inputs.outputs.checkout-root-dir }}
+      
