@@ -63,7 +63,7 @@ jobs:
     # if: ${{ needs.clone.outputs.changes_flag == 'true' }}
     strategy:
       matrix:
-        tests: ${{ fromJSON(needs.setup-wf-inputs.outputs.testnames) }}
+        tests: ${{ fromJSON(needs.setup-wf-inputs.outputs.test-names) }}
     uses: ./.github/workflows/rwf-wf-1.yml
     with:
         checkout-path: ${{ needs.setup-wf-inputs.outputs.checkout-path }}
