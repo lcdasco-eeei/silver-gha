@@ -3,7 +3,7 @@ name: Reusable Workflow 1
 on:
   workflow_call:
     inputs:
-      checkout-root-dir:
+      checkout-path:
         required: true
         type: string
       block:
@@ -20,7 +20,7 @@ on:
         type: string        
 
 env:
-  GHA_CHECKOUT_DIR : ${{ inputs.checkout-root-dir }}/${{ github.actor }}/${{ github.event_name }}/${{ github.run_number }}
+  GHA_CHECKOUT_DIR : ${{ inputs.checkout-path }}
   GHA_TESTSUITES_DIR : ${{ inputs.block }}/subdir/${{ inputs.testsuite }}
   SCRIPT_PATH : scripts/github_actions/run.csh
   
