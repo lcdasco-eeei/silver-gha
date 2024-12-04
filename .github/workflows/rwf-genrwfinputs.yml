@@ -10,11 +10,9 @@ on:
         required: true
         type: string
       block-suffix:
-        required: true
         type: string
         default: ''
       block-prefix:
-        required: true
         type: string
         default: ''
       runner-name:
