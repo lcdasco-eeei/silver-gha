@@ -37,7 +37,7 @@ jobs:
         working-directory: ${{ env.GHA_CHECKOUT_DIR }}
         filters: |
           changes_flag:
-            - '${{env.GHA_BLOCK}}/**'
+            - 'siag/**'
     - name: Show Repository
       run: |
         cd $GITHUB_WORKSPACE/$GHA_CHECKOUT_DIR
