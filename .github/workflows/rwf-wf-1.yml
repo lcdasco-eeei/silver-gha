@@ -12,6 +12,9 @@ on:
       testsuite:
         required: true
         type: string
+      testname:
+        required: true
+        type: string
       runner-name:
         required: true
         type: string        
