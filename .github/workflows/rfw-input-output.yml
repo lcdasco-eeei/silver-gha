@@ -63,7 +63,7 @@ jobs:
         tests: [case1_test, case2_test, case3_test]
     uses: ./.github/workflows/rwf-wf-1.yml
     with:
-        checkout-root-dir: ${{ needs.gen-wf-inputs.outputs.checkout-path }}
+        checkout-path: ${{ needs.gen-wf-inputs.outputs.checkout-path }}
         block: ${{ needs.gen-wf-inputs.outputs.block-name }}
         testsuite: test-suite1
         testname: ${{ matrix.tests }}
