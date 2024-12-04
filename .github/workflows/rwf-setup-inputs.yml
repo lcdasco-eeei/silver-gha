@@ -12,6 +12,7 @@ on:
       testnames:
         required: true
         type: string
+        default: "['bringup_test']"
       block-suffix:
         type: string
         default: ''
