@@ -23,10 +23,15 @@ on:
       checkout-root-dir:
         description: "Check Root Director"
         value: ${{ jobs.gen-rwf-inputs.outputs.checkout-root-dir }}
+      checkout-path:
+        description: "Check Root Director"
+        value: ${{ jobs.gen-rwf-inputs.outputs.checkout-path }}        
       block-name:
-        description: "The second output string"
+        description: "Block Name"
         value: ${{ jobs.gen-rwf-inputs.outputs.block-name }}
-
+      runner-name:
+        description: "Runner Name"
+        value: ${{ jobs.gen-rwf-inputs.outputs.block-name }}
 jobs:
   gen-rwf-inputs:
     name: Generate RWF Inputs
@@ -36,13 +41,21 @@ jobs:
         shell: tcsh {0}  
     outputs:
       checkout-root-dir: ${{ steps.checkout-root-dir.outputs.uppercase }}
+      checkout-path: ${{ steps.checkout-path.outputs.path }}  
       block-name: ${{ steps.block-name.outputs.lowercase }}
+      runner-name: ${{ steps.runner-name.outputs.lowercase }}
     steps:
       - id: checkout-root-dir
         uses: ASzc/change-string-case-action@v6
         with:
           string: ${{ inputs.block-prefix }}${{ inputs.block }}${{ inputs.block-suffix }}
+      - id: checkout-path
+        run: echo "path=${{ steps.checkout-root-dir.outputs.uppercase }}/${{ github.actor }}/${{ github.event_name }}/${{ github.run_number }}" >> $GITHUB_OUTPUT
       - id: block-name
         uses: ASzc/change-string-case-action@v6
         with:
           string: ${{ inputs.block }}
+      - id: runner-name
+        uses: ASzc/change-string-case-action@v6
+        with:
+          string: ${{ inputs.runner-name }}  
