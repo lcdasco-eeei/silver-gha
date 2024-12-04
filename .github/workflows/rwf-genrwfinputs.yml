@@ -31,7 +31,7 @@ on:
         value: ${{ jobs.gen-rwf-inputs.outputs.block-name }}
       runner-name:
         description: "Runner Name"
-        value: ${{ jobs.gen-rwf-inputs.outputs.block-name }}
+        value: ${{ jobs.gen-rwf-inputs.outputs.runner-name }}
 jobs:
   gen-rwf-inputs:
     name: Generate RWF Inputs
