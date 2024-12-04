@@ -42,9 +42,9 @@ jobs:
     outputs:
       checkout-root-dir: ${{ steps.checkout-root-dir.outputs.uppercase }}
       checkout-path: ${{ steps.checkout-path.outputs.path }}  
-      block-name: ${{ steps.block-name.outputs.lowercase }}
-      testsuite-name : ${{ steps.testsuite-name.outputs.lowercase }}
-      runner-name: ${{ steps.runner-name.outputs.lowercase }}
+      block-name: ${{ inputs.block }}
+      testsuite-name : ${{ inputs.testsuite-name }}
+      runner-name: ${{ inputs.runner-name }}
     steps:
       - name : set checkout-root-dir
         id: checkout-root-dir
@@ -54,18 +54,4 @@ jobs:
       - name: set checkout-path
         id: checkout-path
         run: echo "path=${{ steps.checkout-root-dir.outputs.uppercase }}/${{ github.actor }}/${{ github.event_name }}/${{ github.run_number }}" >> $GITHUB_OUTPUT
-      - name: set block-name
-        id: block-name
-        uses: ASzc/change-string-case-action@v6
-        with:
-          string: ${{ inputs.block }}
-      - name: set testsuite-name
-        id: testsuite-name
-        uses: ASzc/change-string-case-action@v6
-        with:
-          string: ${{ inputs.testsuite }}  
-      - name: set runner-name
-        id: runner-name
-        uses: ASzc/change-string-case-action@v6
-        with:
-          string: ${{ inputs.runner-name }}  
+
