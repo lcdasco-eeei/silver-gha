@@ -9,6 +9,9 @@ on:
       testsuite:
         required: true
         type: string
+      testnames:
+        required: true
+        type: string
       block-suffix:
         type: string
         default: ''
@@ -29,6 +32,9 @@ on:
       block-name:
         description: "Block Name"
         value: ${{ jobs.prep-wf-inputs.outputs.block-name }}
+      test-names:
+        description: "Testsuite Names"
+        value: ${{ jobs.prep-wf-inputs.outputs.testsuite-name }}
       testsuite-name:
         description: "Testsuite Name"
         value: ${{ jobs.prep-wf-inputs.outputs.testsuite-name }}
@@ -44,6 +50,7 @@ jobs:
       checkout-path: ${{ steps.checkout-path.outputs.path }}  
       block-name: ${{ inputs.block }}
       testsuite-name : ${{ inputs.testsuite }}
+      test-names : ${{ inputs.testnames }}
       runner-name: ${{ inputs.runner-name }}
     steps:
       - name : set checkout-root-dir
