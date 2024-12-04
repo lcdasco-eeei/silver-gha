@@ -45,5 +45,6 @@ jobs:
         with:
           string: ${{ inputs.block-prefix }}${{ inputs.block }}${{ inputs.block-suffix }}
       - id: block-name
+        uses: ASzc/change-string-case-action@v6
         with:
           string: ${{ inputs.block }}
