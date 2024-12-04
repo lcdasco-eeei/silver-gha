@@ -25,7 +25,7 @@ env:
   SCRIPT_PATH : scripts/github_actions/run.csh
   
 jobs:
-  elaborate:
+  runtest:
     runs-on: "${{ inputs.runner-name }}"
     steps:
     - name: Run Job
