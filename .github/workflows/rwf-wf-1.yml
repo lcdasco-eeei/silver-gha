@@ -30,7 +30,7 @@ jobs:
     steps:
     - name: Run Job
       run: |
-        echo ${{ env.GHA_CHECKOUT_DIR }}/${{ env.SCRIPT_PATH }} ${{ inputs.block }} ${{ inputs.testsuite }}
+        echo ${{ env.GHA_CHECKOUT_DIR }}/${{ env.SCRIPT_PATH }} ${{ inputs.block }} ${{ inputs.testsuite }} ${{ inputs.testname }}
     - name: Artifacts Collection
       uses: actions/upload-artifact@v4
       with:
