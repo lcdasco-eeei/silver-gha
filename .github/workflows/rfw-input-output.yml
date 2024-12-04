@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   setup-wf-inputs:
-    uses: ./.github/workflows/rwf-genrwfinputs.yml
+    uses: ./.github/workflows/rwf-setup-inputs.yml
     with:
       block: siag
       block-suffix: _SMOKE
